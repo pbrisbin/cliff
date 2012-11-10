@@ -1,7 +1,7 @@
 require 'cliff/option'
+require 'cliff/options'
 require 'cliff/flag'
 require 'cliff/list'
-require 'cliff/options'
 
 module Cliff
   class Base
@@ -39,5 +39,4 @@ module Cliff
       end
     end
   end
-
 end
