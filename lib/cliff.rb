@@ -1,7 +1,7 @@
 require 'cliff/option'
 require 'cliff/flag'
 require 'cliff/list'
-require 'cliff/option_set'
+require 'cliff/options'
 
 module Cliff
   class Base
@@ -21,13 +21,11 @@ module Cliff
       end
 
       def load_from_argv(argv)
-        set = OptionSet.new(options)
-        set.load_from_argv(argv)
+        options.load_from_argv!(argv)
       end
 
       def load_from_yaml(str)
-        set = OptionSet.new(options)
-        set.load_from_yaml(str)
+        options.load_from_yaml!(str)
       end
 
       def method_missing(key, *args, &block)
@@ -37,7 +35,7 @@ module Cliff
       private
 
       def options
-        @options ||= []
+        @options ||= Options.new
       end
     end
   end

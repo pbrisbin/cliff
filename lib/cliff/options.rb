@@ -2,16 +2,22 @@ require 'optparse'
 require 'yaml'
 
 module Cliff
-  class OptionSet
-    attr_reader :options
-
-    def initialize(options)
+  class Options
+    def initialize(options = [])
       @options = options
     end
 
-    def load_from_argv(argv)
+    def <<(option)
+      @options << option
+    end
+
+    def detect(&block)
+      @options.detect(&block)
+    end
+
+    def load_from_argv!(argv)
       OptionParser.new do |p|
-        options.each do |o|
+        @options.each do |o|
           p.on(*o.parser_args, &o.parser_block)
         end
       end.parse!(argv)
@@ -19,10 +25,10 @@ module Cliff
       argv
     end
 
-    def load_from_yaml(str)
+    def load_from_yaml!(str)
       hsh = YAML.load(str)
 
-      options.each do |o|
+      @options.each do |o|
         if v = hsh[o.key.to_s]
           o.value = v
         end
