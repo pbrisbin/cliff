@@ -3,6 +3,8 @@ require 'yaml'
 
 module Cliff
   class Options
+    include Enumerable
+
     def initialize(options = [])
       @options = options
     end
@@ -11,13 +13,13 @@ module Cliff
       @options << option
     end
 
-    def detect(&block)
-      @options.detect(&block)
+    def each(&block)
+      @options.each(&block)
     end
 
     def load_from_argv!(argv)
       OptionParser.new do |p|
-        @options.each do |o|
+        each do |o|
           p.on(*o.parser_args, &o.parser_block)
         end
       end.parse!(argv)
@@ -28,7 +30,7 @@ module Cliff
     def load_from_yaml!(str)
       hsh = YAML.load(str)
 
-      @options.each do |o|
+      each do |o|
         if v = hsh[o.key.to_s]
           o.value = v
         end
