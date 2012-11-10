@@ -1,28 +1,29 @@
 require 'spec_helper'
 
-module MyApp
-  class Config < Cliff::Base
+class MyConfig < Cliff::Base
+  option :input, 'Input files'
 
-    option :verbose, :bool, false
-    option :input, :string, '-'
+  option :output, 'Output files', :list
 
-  end
+  option :verbose, 'Act verbosely', :flag
+end
 
-  describe Config do
-    it "should have defaults" do
-      Config.verbose?.should be_false
-      Config.input.should == '-'
-    end
-
-    it "should be loadable from a file" do
-      Config.load <<-EOYAML
+describe Cliff do
+  it "should load from yaml and argv" do
+    MyConfig.load_from_yaml <<-EOY
       verbose: true
-      input: ./a/file
-      EOYAML
+      input: x
+      output:
+       - y
+       - z
+      EOY
 
-      Config.verbose?.should be_true
-      Config.input.should == './a/file'
-    end
+    MyConfig.load_from_argv(%w[ --no-verbose --input A --output B --output z ])
 
+    MyConfig.verbose.should be_false
+
+    MyConfig.input.should == 'A'
+
+    MyConfig.output.should match_array(%w[ y z B z ])
   end
 end
