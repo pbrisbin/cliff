@@ -70,7 +70,7 @@ MyApp::Main.run []
 MyApp::Main.run %w[ --verbose --input X --output Y --output Z ]
 # true
 # "X"
-# [ B, C, D, Y Z ]
+# [ B, C, D, Y, Z ]
 
 MyApp::Main.run %w[ --help ]
 # usage: my_app [options]
